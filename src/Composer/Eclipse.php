@@ -14,51 +14,48 @@ use Composer\Eclipse\Prefs;
 
 use Devlab\Utils\ArrayUtils;
 use Devlab\Utils\StringUtils;
-
+use Composer\Package\Package;
+use Composer\Eclipse\EventWrapper;
 
 
 class Eclipse {
 	
-	private $composer;
+	/**
+	 * @var EventWrapper
+	 */
+	private $eventWrapper;
 	
-	private $filesystem;
-
-	private $package;
-
+	/**
+	 * @var string
+	 */
 	private $projectDir;
 	
+	/**
+	 * @var string
+	 */	
 	private $settingsDir;
-	
-	private $io;
 	
 	public static function eclipse(Event $event)
 	{		
 		if($event->isDevMode()) {
 		
-			$composer = $event->getComposer();
-		
-			$io = $event->getIO();
-			
-			$eclipse = new Eclipse($composer, $io);
+			$eventWrapper = new EventWrapper($event);			
+			$eclipse = new Eclipse($eventWrapper);
 			$eclipse->execute();			
 		}
 	}
 	
-	private function __construct(Composer $composer, IOInterface $io)
+	
+	public function __construct(EventWrapper $eventWrapper)
 	{
-		$this->composer = $composer;
-		$this->io = $io;
-		$this->package = $this->composer->getPackage();
-		$this->filesystem = new Filesystem();
-
-		$this->projectDir = $this->filesystem->normalizePath(getcwd());
+		$this->eventWrapper = $eventWrapper;
+		$this->projectDir = $eventWrapper->getProjectDir();
 		$this->settingsDir = $this->projectDir . DIRECTORY_SEPARATOR.".settings";
-
 	}
 	
-	private function execute() {
-	
-		$projectName = $this->package->getName() . "-". $this->package->getVersion();
+	public function execute() {
+
+		$projectName = $this->eventWrapper->getPackageName() . "-". $this->eventWrapper->getPackageVersion();
 	
 		$this->setupPHPProject($projectName);	
 		$this->setupPHPIncludePath($projectName);		
@@ -66,11 +63,11 @@ class Eclipse {
 	
 	private function setupPHPProject($projectName) {
 
-		$this->io->write("Generating file ".$this->projectDir . DIRECTORY_SEPARATOR.".project");		
+		$this->log("Generating file ".$this->projectDir . DIRECTORY_SEPARATOR.".project");		
 		
 		$project = new Project ( $projectName );
 			
-		$extra = $this->composer->getPackage()->getExtra();
+		$extra = $this->eventWrapper->getProjectExtra();
 
 		foreach ($this->getBuilders($extra) as $builder) {
 			$project->addBuildCommand($builder);
@@ -116,18 +113,18 @@ class Eclipse {
 
 	private function setupPHPIncludePath($projectName)
 	{	
-		$sources = $this->generateAbsoluteAutoloadPaths();
+		$sources = $this->generateAbsoluteAutoloadPaths();		
 		$paths = $this->transformToRelativePaths($sources);
-	
+				
 		$this->setupBuildPath($paths);
 
-		$this->setupPrefs($this->package->getName(), $paths);
+		$this->setupPrefs($this->eventWrapper->getPackageName(), $paths);
 
 	}
 	
 	private function setupBuildPath(array $paths) 
 	{
-		$this->io->write("Generating file ".$this->projectDir . DIRECTORY_SEPARATOR.".buildpath");
+		$this->log("Generating file ".$this->projectDir . DIRECTORY_SEPARATOR.".buildpath");
 		
 		$buildPath = new BuildPath();
 		
@@ -146,7 +143,7 @@ class Eclipse {
 	{		
 		$settingsDir = $this->projectDir . DIRECTORY_SEPARATOR.".settings";
 
-		$this->io->write("Generating file ".$settingsDir.DIRECTORY_SEPARATOR."org.eclipse.php.core.prefs");
+		$this->log("Generating file ".$settingsDir.DIRECTORY_SEPARATOR."org.eclipse.php.core.prefs");
 		
 		$prefs = new Prefs ();
 		
@@ -154,32 +151,27 @@ class Eclipse {
 			$prefs->addIncludePath(DIRECTORY_SEPARATOR.$projectName.DIRECTORY_SEPARATOR.$source);
 		}
 		
-		$this->filesystem->ensureDirectoryExists($settingsDir);
+		$this->eventWrapper->ensureDirectoryExists($settingsDir);
 		
-		$prefs->save ( $settingsDir.DIRECTORY_SEPARATOR."org.eclipse.php.core.prefs");
-		
+		$prefs->save ( $settingsDir.DIRECTORY_SEPARATOR."org.eclipse.php.core.prefs");		
 	}	
 
 	private function generateAbsoluteAutoloadPaths() 
 	{ 	
-		$generator = $this->composer->getAutoloadGenerator();
-		$packages = $this->composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
-		$packageMap = $generator->buildPackageMap($this->composer->getInstallationManager(), $this->package, $packages);
-		$map = $generator->parseAutoloads($packageMap, $this->package);
+		$map = $this->eventWrapper->getProjectIncludePaths();
 		return ArrayUtils::arrayValueRecursive($map);
 	}
-
 
 
 	private function transformToRelativePaths(array $sources) {
 		
 		$paths = array();
 
-		$vendorPath = $this->filesystem->normalizePath(realpath($this->composer->getConfig()->get('vendor-dir')));
+		$vendorDir = $this->eventWrapper->getVendorDir();
 		
 		foreach ($sources as $source) {
 
-			$path = new Path($source, $vendorPath);
+			$path = new Path($source, $vendorDir);
 			
 			if($path->isExists()) {
 				
@@ -195,6 +187,10 @@ class Eclipse {
 		return $paths;
 	}
 
+	private function log($messages) 
+	{
+		$this->eventWrapper->write($messages);
+	}
 	
 
 }

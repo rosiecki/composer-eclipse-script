@@ -4,8 +4,7 @@ namespace Composer\Eclipse;
 
 use \DOMDocument;
 use \DOMElement;
-use NetArt\Tools\Utils;
-use NetArt\Tools\Utils\BooleanUtils;
+use Devlab\Utils\BooleanUtils;
 
 class BuildPath {
 

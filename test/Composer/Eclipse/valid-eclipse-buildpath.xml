@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<buildpath>
+  <buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+  <buildpathentry kind="lib" path="/home/rosiecki/composer-eclipse-script/source" external="true"/>
+  <buildpathentry kind="proj" path="/same-project" combineaccessrules="false"/>
+  <buildpathentry kind="src" path="vendor/composer/composer/src"/>
+</buildpath>

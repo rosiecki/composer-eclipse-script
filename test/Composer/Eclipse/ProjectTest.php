@@ -5,8 +5,8 @@ namespace Composer;
 use Composer\Eclipse\Project;
 
 
-class ProjectTest extends \PHPUnit_Framework_TestCase {
-
+class ProjectTest extends \PHPUnit_Framework_TestCase 
+{
 	private $filename;
 	
  	protected function setUp()
@@ -34,17 +34,12 @@ class ProjectTest extends \PHPUnit_Framework_TestCase {
 
 		// then
 		
-		$this->assertDescriptorsEquals("valid-eclipse-project-descriptor.xml", $this->filename);				
-	}
-	
-	private function assertDescriptorsEquals($expected, $actual) {
-		return $this->assertFileEquals(__DIR__.DIRECTORY_SEPARATOR.$expected, $actual);
+		$this->assertFileEquals(__DIR__."/valid-eclipse-project.xml", $this->filename);				
 	}
 
 	protected function tearDown()
 	{
-		@unlink($this->filename);
+		unlink($this->filename);
 	}	
 	
 }
-

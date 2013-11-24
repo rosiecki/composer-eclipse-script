@@ -6,10 +6,10 @@ use Composer\Eclipse\Project;
 use Composer\Eclipse\Path;
 
 
-class PathTest extends \PHPUnit_Framework_TestCase {
-	
-	public function testIsVendorSource() {
-		
+class PathTest extends \PHPUnit_Framework_TestCase 
+{
+	public function testIsVendorSource() 
+	{		
 		// given
 		
 		$source = "/home/rosiecki/composer-eclipse-script/vendor/composer"; 
@@ -27,8 +27,8 @@ class PathTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 
-	public function testIsNotVendorSource() {
-	
+	public function testIsNotVendorSource() 
+	{	
 		// given
 	
 		$source = "/home/rosiecki/composer-eclipse-script/src";
@@ -46,8 +46,8 @@ class PathTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 
-	public function testIsExists() {
-	
+	public function testIsExists() 
+	{
 		// given
 	
 		$source = __DIR__;
@@ -64,8 +64,8 @@ class PathTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($isExists);
 	}	
 	
-	public function testVendorize() {
-	
+	public function testVendorize() 
+	{
 		// given
 	
 		$source = "/home/rosiecki/composer-eclipse-script/vendor/composer";
@@ -81,7 +81,4 @@ class PathTest extends \PHPUnit_Framework_TestCase {
 	
 		$this->assertEquals("vendor/composer", $vendorizedPath);
 	}
-	
-	
-	
 }

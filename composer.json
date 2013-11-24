@@ -19,8 +19,7 @@
     },
     "autoload" : {
         "psr-0" : {
-            "Composer\\Eclipse" : "src/",
-            "Devlab\\Utils" : "src/"
+            "" : "src/"
         }
     }
 }
