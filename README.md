@@ -6,7 +6,7 @@ First, you have to add a requiment to your ``composer.json``:
 
     "repositories": [{
         "type": "git",
-        "url": "https://github.com/rosiecki/composer-eclipse-script.git
+        "url": "https://github.com/rosiecki/composer-eclipse-script.git"
     }],
     "require-dev": {
         "rosiecki/composer-eclipse-script": "1.0"
