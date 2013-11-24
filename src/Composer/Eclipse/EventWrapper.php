@@ -2,6 +2,10 @@
 namespace Composer\Eclipse;
 
 use Composer\Script\Event;
+use Composer\Util\Filesystem;
+use Composer\Composer;
+use Composer\IO\IOInterface;
+use Composer\Package\Package;
 
 class EventWrapper 
 {
