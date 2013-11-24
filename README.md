@@ -8,7 +8,7 @@ First, you have to add a requiment to your ``composer.json``:
         "type": "git",
         "url": "https://github.com/rosiecki/composer-eclipse-script.git
     }],
-    "require": {
+    "require-dev": {
         "rosiecki/composer-eclipse-script": "1.0"
     }
     
