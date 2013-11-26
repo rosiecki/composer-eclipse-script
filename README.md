@@ -9,7 +9,7 @@ First, you have to add a requiment to your ``composer.json``:
         "url": "https://github.com/rosiecki/composer-eclipse-script.git"
     }],
     "require-dev": {
-        "rosiecki/composer-eclipse-script": "1.0"
+        "rosiecki/composer-eclipse-script": "dev-master"
     }
     
 and define some hooks:
