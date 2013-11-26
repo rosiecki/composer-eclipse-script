@@ -1,5 +1,8 @@
-composer-eclipse-script
-=======================
+###composer-eclipse-script###
+
+[![Build Status](https://drone.io/github.com/rosiecki/composer-eclipse-script/status.png)](https://drone.io/github.com/rosiecki/composer-eclipse-script/latest)
+
+
 I wrote a simple composer script, which can help you to create Eclipse configuration files. It is similiar to maven-eclipse-plugin.
 
 First, you have to add a requiment to your ``composer.json``:
